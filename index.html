@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CdM 2026 - Pronostics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--acc:#E8C96A;--adim:rgba(232,201,106,0.1);--red:#B83232;--grn:#1E5C36;--grn2:#2A9D5C;--dk:#080C14;--dk2:#0C1420;--card:#0E1A28;--card2:#142030;--brd:#1C3050;--brd2:#203860;--txt:#D8E0EC;--mut:#607A96;--mut2:#4A6080;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow-x:hidden;}
+body{background:var(--dk);color:var(--txt);font-family:'Barlow',sans-serif;min-height:100vh;}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(232,201,106,0.07) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 95% 95%,rgba(30,92,54,0.12) 0%,transparent 60%);}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:linear-gradient(160deg,#04080F 0%,#09152A 55%,#060D1A 100%);overflow:hidden;}
+.login-hero{text-align:center;}
+.ball-ico{font-size:50px;display:block;margin-bottom:10px;animation:bob 3s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.login-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(50px,13vw,90px);letter-spacing:8px;line-height:.88;color:#fff;}
+.login-hero h1 em{color:var(--acc);font-style:normal;}
+.login-hero p{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--mut);margin-top:8px;}
+
+.lcard{background:rgba(14,26,40,0.97);border:1px solid var(--brd2);border-radius:18px;padding:24px;width:min(320px,94vw);box-shadow:0 32px 80px rgba(0,0,0,0.7);}
+.ltitle{font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-bottom:16px;text-align:center;}
+.lstep{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acc);text-align:center;margin-bottom:12px;}
+
+select.lsel{width:100%;background:var(--dk2);border:1px solid var(--brd2);color:var(--txt);padding:11px 14px;border-radius:9px;font-family:'Barlow',sans-serif;font-size:15px;margin-bottom:16px;appearance:none;-webkit-appearance:none;}
+
+.dots{display:flex;gap:14px;justify-content:center;margin-bottom:16px;}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--brd2);background:transparent;transition:all .18s;}
+.dot.on{background:var(--acc);border-color:var(--acc);}
+
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
+.pk{background:var(--card2);border:1px solid var(--brd);color:var(--txt);padding:12px 8px;border-radius:9px;cursor:pointer;font-family:'Bebas Neue',sans-serif;font-size:22px;transition:all .12s;width:100%;}
+.pk:hover{background:var(--brd2);color:var(--acc);}
+.pk:active{transform:scale(.92);}
+.pk.del{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:var(--mut);}
+
+.bgo{width:100%;padding:13px;background:var(--acc);color:#000;border:none;border-radius:9px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:3px;text-transform:uppercase;transition:all .2s;margin-top:4px;}
+.bgo:hover{background:#F0D880;}
+.bgo:disabled{opacity:.3;cursor:not-allowed;}
+.errmsg{color:#E05050;text-align:center;font-size:12px;margin-bottom:8px;font-family:'Barlow Condensed',sans-serif;display:none;}
+
+/* HEADER */
+header{position:relative;z-index:10;background:rgba(8,12,20,0.98);border-bottom:1px solid var(--brd2);padding:12px 16px 10px;}
+.hi{max-width:900px;margin:0 auto;}
+.htit{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,4vw,30px);letter-spacing:4px;color:var(--acc);}
+.hsub{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-top:2px;}
+.upill{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,0.03);border:1px solid var(--brd);border-radius:30px;padding:5px 12px 5px 10px;margin-top:10px;flex-wrap:wrap;}
+.uname{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--txt);}
+.rbadge{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;background:var(--grn);color:#ccc;padding:3px 9px;border-radius:20px;font-family:'Barlow Condensed',sans-serif;}
+.rbadge.admin{background:var(--red);}
+#btn-logout{background:none;border:1px solid var(--brd);color:var(--mut2);padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;transition:all .2s;}
+#btn-logout:hover{border-color:var(--acc);color:var(--acc);}
+
+/* TABS */
+nav.tabs{position:sticky;top:0;z-index:20;display:flex;background:rgba(8,12,20,0.98);border-bottom:1px solid var(--brd);overflow-x:auto;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+nav.tabs button{flex:1;min-width:68px;background:none;border:none;cursor:pointer;padding:12px 5px 10px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut2);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;}
+nav.tabs button.active{color:var(--acc);border-bottom-color:var(--acc);}
+
+/* MAIN */
+main{position:relative;z-index:5;max-width:900px;margin:0 auto;padding:18px 14px 80px;}
+.page{display:none;}.page.active{display:block;}
+.stitle{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--txt);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.stitle em{color:var(--acc);font-style:normal;}
+.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--brd2),transparent);}
+
+/* FILTER */
+.fbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+.fbtn{background:transparent;border:1px solid var(--brd);color:var(--mut);padding:5px 12px;border-radius:20px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all .2s;}
+.fbtn.active{border-color:var(--acc);color:var(--acc);background:var(--adim);}
+
+/* MATCH */
+.mcard{background:var(--card);border:1px solid var(--brd);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s;}
+.mcard.done{border-left:3px solid var(--grn2);}
+.mcard.lkd{opacity:.8;}
+.mhdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;padding:7px 13px;background:rgba(0,0,0,0.25);font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;}
+.glbl{color:var(--acc);font-weight:800;text-transform:uppercase;}
+.mdt{color:var(--mut);}
+.sto{color:#3DB870;}.stl{color:var(--acc);}.std{color:#3DB870;}
+.mteams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:13px 14px;}
+.team{display:flex;align-items:center;gap:7px;min-width:0;}
+.team.r{flex-direction:row-reverse;}
+.tf{font-size:24px;line-height:1;flex-shrink:0;}
+.tn{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;}
+.vsb{text-align:center;min-width:58px;}
+.vsc{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--acc);letter-spacing:3px;}
+.vst{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--mut2);letter-spacing:3px;}
+.pzone{padding:9px 13px 13px;background:rgba(0,0,0,0.18);border-top:1px solid rgba(28,48,80,0.6);}
+.plbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--mut2);margin-bottom:7px;}
+.pchs{display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap;}
+.pch{flex:1;min-width:76px;padding:7px 4px;background:var(--card2);border:1px solid var(--brd2);color:var(--txt);border-radius:7px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-align:center;transition:all .14s;}
+.pch:hover:not(:disabled){border-color:var(--acc);color:var(--acc);}
+.pch.sel{background:var(--acc);border-color:var(--acc);color:#000;}
+.pch:disabled{opacity:.35;cursor:not-allowed;}
+.srow{display:flex;align-items:center;gap:7px;}
+.slbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--mut);flex-shrink:0;}
+.sin{width:46px;height:36px;background:var(--dk2);border:1px solid var(--brd2);color:var(--txt);text-align:center;border-radius:7px;font-size:17px;font-weight:700;font-family:'Bebas Neue',sans-serif;}
+.sin:focus{outline:none;border-color:var(--acc);}
+.sin:disabled{opacity:.35;}
+.ssep{color:var(--mut2);font-weight:700;font-size:16px;}
+.sbtn{margin-top:9px;width:100%;padding:8px;background:var(--grn);border:none;color:#ccc;border-radius:7px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;transition:all .2s;}
+.sbtn:hover{background:#236B40;color:#fff;}
+.sbtn.saved{background:#1A5430;color:var(--grn2);}
+.pchip{display:inline-flex;align-items:center;background:rgba(232,201,106,0.12);border:1px solid rgba(232,201,106,0.25);color:var(--acc);font-family:'Bebas Neue',sans-serif;font-size:12px;padding:2px 8px;border-radius:20px;margin-left:6px;}
+.recap{margin-top:8px;padding:7px 10px;background:rgba(0,0,0,0.2);border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--mut);}
+.recap strong{color:var(--txt);}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--brd);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.chd{background:rgba(0,0,0,0.25);padding:11px 15px;border-bottom:1px solid var(--brd);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--txt);}
+.cbd{padding:15px;}
+
+/* CLASSEMENT */
+.rtbl{width:100%;border-collapse:collapse;}
+.rtbl th{text-align:left;padding:9px 12px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mut2);border-bottom:1px solid var(--brd2);}
+.rtbl td{padding:11px 12px;border-bottom:1px solid rgba(28,48,80,0.35);}
+.rtbl tr:last-child td{border-bottom:none;}
+.rn{font-family:'Bebas Neue',sans-serif;font-size:22px;width:36px;color:var(--mut2);}
+.rn.r1{color:#E8C96A;}.rn.r2{color:#A0A8B0;}.rn.r3{color:#A06830;}
+.rnm{font-weight:600;font-size:15px;}
+.rpt{font-family:'Bebas Neue',sans-serif;font-size:25px;color:var(--acc);text-align:right;}
+.vch{font-size:11px;color:var(--grn2);font-family:'Barlow Condensed',sans-serif;}
+
+/* VAINQUEUR */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:7px;}
+.cbt{background:var(--card2);border:1px solid var(--brd);border-radius:9px;padding:9px 5px;text-align:center;cursor:pointer;transition:all .18s;color:var(--txt);}
+.cbt:hover{border-color:var(--acc);}
+.cbt.sel{border-color:var(--acc);background:var(--adim);}
+.cfl{font-size:20px;display:block;margin-bottom:3px;}
+.cnm{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;}
+
+/* REGLES */
+.rit{display:flex;align-items:flex-start;gap:13px;padding:12px 0;border-bottom:1px solid rgba(28,48,80,0.35);}
+.rit:last-child{border-bottom:none;}
+.rbox{min-width:52px;text-align:center;background:rgba(232,201,106,0.07);border:1px solid rgba(232,201,106,0.2);border-radius:9px;padding:5px 4px;}
+.rpts{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--acc);line-height:1;}
+.rlb{font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--mut);letter-spacing:1px;text-transform:uppercase;}
+.rdc{font-size:14px;line-height:1.6;}
+.rdc strong{display:block;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:800;color:var(--txt);margin-bottom:2px;}
+
+/* ADMIN */
+.am{display:grid;grid-template-columns:1fr auto 1fr auto;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid rgba(28,48,80,0.35);}
+.am:last-child{border-bottom:none;}
+.at{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;}
+.ri{display:flex;align-items:center;gap:5px;}
+.rin{width:38px;height:32px;background:var(--dk2);border:1px solid var(--brd2);color:var(--txt);text-align:center;border-radius:6px;font-size:15px;font-weight:700;font-family:'Bebas Neue',sans-serif;}
+.rin:focus{outline:none;border-color:var(--acc);}
+.bval{background:var(--red);border:none;color:#ddd;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:all .2s;white-space:nowrap;}
+.bval.done{background:#1A5430;color:var(--grn2);}
+.inp{width:100%;background:var(--dk2);border:1px solid var(--brd2);color:var(--txt);padding:10px 13px;border-radius:9px;font-family:'Barlow',sans-serif;font-size:14px;}
+.inp:focus{outline:none;border-color:var(--acc);}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--brd2);color:var(--txt);padding:10px 20px;border-radius:30px;font-family:'Barlow Condensed',sans-serif;font-size:13px;opacity:0;transition:opacity .3s;z-index:9999;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;}
+
+@media(max-width:480px){.tn{font-size:12px;}.tf{font-size:20px;}.am{grid-template-columns:1fr 1fr;gap:5px;}}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-hero">
+    <span class="ball-ico">&#9917;</span>
+    <h1>CDM<br><em>2026</em></h1>
+    <p>Challenge Pronostics &middot; SPIP Moselle</p>
+  </div>
+  <div class="lcard" id="lcard"></div>
+</div>
+
+<div id="app" style="display:none">
+  <header><div class="hi">
+    <div class="htit">&#9917; Coupe du Monde 2026</div>
+    <div class="hsub">Challenge Pronostics &middot; SPIP Moselle</div>
+    <div class="upill">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="uname" id="dname">-</span>
+        <span class="rbadge" id="drole">Joueur</span>
+      </div>
+      <button id="btn-logout">Deconnexion</button>
+    </div>
+  </div></header>
+  <nav class="tabs">
+    <button class="active" data-tab="pronostics">Matchs</button>
+    <button data-tab="vainqueur">Vainqueur</button>
+    <button data-tab="classement">Classement</button>
+    <button data-tab="regles">Regles</button>
+    <button data-tab="admin" id="tab-admin" style="display:none">Admin</button>
+  </nav>
+  <main>
+    <div class="page active" id="page-pronostics">
+      <div class="stitle"><em>&#9917;</em> Matchs</div>
+      <div class="fbar" id="fbar"></div>
+      <div id="mlist"></div>
+    </div>
+    <div class="page" id="page-vainqueur">
+      <div class="stitle"><em>&#127942;</em> Vainqueur</div>
+      <div class="card"><div class="cbd">
+        <p style="margin-bottom:14px;font-size:14px;color:var(--mut);line-height:1.6">Quel pays remportera la CdM 2026 ?<br><strong style="color:var(--acc)">+20 points</strong> si correct. Choix <strong style="color:var(--txt)">definitif</strong>.</p>
+        <div id="vdisplay" style="display:none">
+          <div style="text-align:center;padding:20px;background:rgba(232,201,106,0.06);border-radius:10px;border:1px solid rgba(232,201,106,0.2)">
+            <div style="font-size:48px;margin-bottom:8px" id="vflag">-</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--acc);letter-spacing:3px" id="vnam">-</div>
+            <div style="font-size:12px;color:var(--grn2);margin-top:6px;font-family:'Barlow Condensed',sans-serif;">Choix enregistre</div>
+          </div>
+        </div>
+        <div id="vpicker">
+          <div class="cgrid" id="cgrid"></div>
+          <button class="bgo" style="margin-top:13px" id="btn-cv" disabled>Confirmer mon choix (+20 pts)</button>
+        </div>
+      </div></div>
+    </div>
+    <div class="page" id="page-classement">
+      <div class="stitle"><em>&#127941;</em> Classement</div>
+      <div class="card"><div class="cbd" style="padding:0">
+        <table class="rtbl">
+          <thead><tr><th>#</th><th>Joueur</th><th>Vainqueur</th><th style="text-align:right">Pts</th></tr></thead>
+          <tbody id="rtbody"></tbody>
+        </table>
+      </div></div>
+    </div>
+    <div class="page" id="page-regles">
+      <div class="stitle"><em>&#128203;</em> Regles</div>
+      <div class="card"><div class="cbd" style="padding:0 15px">
+        <div class="rit"><div class="rbox"><div class="rpts">3</div><div class="rlb">pts</div></div><div class="rdc"><strong>Bon score ET bon pronostic</strong>Resultat correct ET score exact.</div></div>
+        <div class="rit"><div class="rbox"><div class="rpts">1</div><div class="rlb">pt</div></div><div class="rdc"><strong>Bon pronostic seul</strong>Resultat correct mais score inexact.</div></div>
+        <div class="rit"><div class="rbox" style="border-color:rgba(96,122,150,0.2);background:transparent"><div class="rpts" style="color:var(--mut2)">0</div><div class="rlb">pt</div></div><div class="rdc"><strong style="color:var(--mut)">Mauvais resultat</strong>Le resultat predit est incorrect.</div></div>
+        <div class="rit"><div class="rbox"><div class="rpts">20</div><div class="rlb">bonus</div></div><div class="rdc"><strong>Vainqueur de la CdM</strong>Bonus si votre pays gagne. Choix definitif avant le 1er match.</div></div>
+      </div></div>
+    </div>
+    <div class="page" id="page-admin">
+      <div class="stitle"><em>&#9881;</em> Admin</div>
+      <div class="card" style="margin-bottom:14px"><div class="chd">Ajouter un participant</div>
+        <div class="cbd" style="display:flex;gap:10px;flex-wrap:wrap">
+          <input type="text" id="new-name" placeholder="Prenom Nom" class="inp" style="flex:1;min-width:130px">
+          <input type="text" id="new-pin" placeholder="PIN temp (4 chiffres)" maxlength="4" class="inp" style="width:180px">
+          <button class="bval" id="btn-add">Ajouter</button>
+        </div>
+        <div style="padding:0 15px 12px;font-size:12px;color:var(--mut);font-family:'Barlow Condensed',sans-serif;">Le participant choisira son propre PIN a la 1ere connexion.</div>
+      </div>
+      <div class="card" style="margin-bottom:14px"><div class="chd">Vainqueur reel</div>
+        <div class="cbd" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <input type="text" id="v-reel" placeholder="Nom exact du pays vainqueur" class="inp" style="flex:1;min-width:180px">
+          <button class="bval" id="btn-sv">Valider</button>
+        </div>
+      </div>
+      <div class="card"><div class="chd">Resultats des matchs</div>
+        <div class="cbd" style="padding:0 15px"><div id="admin-matches"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var GROUPS = {
+  A:[{f:'MX',n:'Mexique'},{f:'ZA',n:'Afrique du S.'},{f:'KR',n:'Coree du S.'},{f:'CZ',n:'R. tcheque'}],
+  B:[{f:'CA',n:'Canada'},{f:'QA',n:'Qatar'},{f:'CH',n:'Suisse'},{f:'BA',n:'Bosnie-H.'}],
+  C:[{f:'BR',n:'Bresil'},{f:'MA',n:'Maroc'},{f:'HT',n:'Haiti'},{f:'SCO',n:'Ecosse'}],
+  D:[{f:'US',n:'Etats-Unis'},{f:'PY',n:'Paraguay'},{f:'AU',n:'Australie'},{f:'TR',n:'Turquie'}],
+  E:[{f:'DE',n:'Allemagne'},{f:'CW',n:'Curacao'},{f:'CI',n:"Cote d'Iv."},{f:'EC',n:'Equateur'}],
+  F:[{f:'NL',n:'Pays-Bas'},{f:'JP',n:'Japon'},{f:'TN',n:'Tunisie'},{f:'SE',n:'Suede'}],
+  G:[{f:'BE',n:'Belgique'},{f:'EG',n:'Egypte'},{f:'IR',n:'Iran'},{f:'NZ',n:'N.-Zelande'}],
+  H:[{f:'ES',n:'Espagne'},{f:'CV',n:'Cap-Vert'},{f:'SA',n:'Ar. saoudite'},{f:'UY',n:'Uruguay'}],
+  I:[{f:'FR',n:'France'},{f:'IQ',n:'Irak'},{f:'SN',n:'Senegal'},{f:'NO',n:'Norvege'}],
+  J:[{f:'AR',n:'Argentine'},{f:'DZ',n:'Algerie'},{f:'AT',n:'Autriche'},{f:'JO',n:'Jordanie'}],
+  K:[{f:'CD',n:'RD Congo'},{f:'PT',n:'Portugal'},{f:'UZ',n:'Ouzbek.'},{f:'CO',n:'Colombie'}],
+  L:[{f:'ENG',n:'Angleterre'},{f:'HR',n:'Croatie'},{f:'GH',n:'Ghana'},{f:'PA',n:'Panama'}]
+};
+var GD = {
+  A:['12/06','16/0
