@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CdM 2026 — Pronostics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#F0C03A;--lime:#B8FF47;--red:#FF3B3B;--ink:#080C14;--ink2:#111827;--ink3:#1C2840;--card:#0E1A2A;--brd:#1E3050;--txt:#E8EEF8;--mut:#5A7090;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--ink);color:var(--txt);font-family:'Barlow',sans-serif;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:rgba(8,12,20,.97);border-bottom:3px solid var(--gold);padding:10px 16px;position:sticky;top:0;z-index:50;}
+.topbar-in{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:4px;color:var(--gold);line-height:1;}
+.brand small{display:block;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;color:var(--mut);font-weight:400;}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.name-inp{background:var(--ink2);border:2px solid var(--gold);border-radius:8px;color:var(--txt);padding:6px 12px;font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;letter-spacing:1px;width:160px;}
+.name-inp:focus{outline:none;border-color:var(--lime);}
+.name-inp::placeholder{color:var(--mut);font-weight:400;}
+.btn-sm{background:none;border:1px solid var(--brd);color:var(--mut);padding:6px 12px;border-radius:6px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:1px;transition:all .2s;white-space:nowrap;}
+.btn-sm:hover{border-color:var(--gold);color:var(--gold);}
+
+/* TABS */
+.tabs{display:flex;background:var(--ink2);border-bottom:1px solid var(--brd);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:1;min-width:80px;background:none;border:none;cursor:pointer;padding:13px 8px 11px;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--mut);border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* MAIN */
+.wrap{max-width:960px;margin:0 auto;padding:20px 14px 80px;}
+.pg{display:none;}.pg.on{display:block;}
+.stit{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:5px;color:var(--txt);margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.stit em{color:var(--gold);font-style:normal;}
+.stit::after{content:'';flex:1;height:2px;background:linear-gradient(90deg,var(--gold),transparent);}
+
+/* FILTER */
+.fbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;}
+.flt{background:transparent;border:1px solid var(--brd);color:var(--mut);padding:5px 13px;border-radius:30px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:all .2s;}
+.flt.on{border-color:var(--gold);color:var(--gold);background:rgba(240,192,58,.08);}
+
+/* MATCH */
+.mc{background:var(--card);border:1px solid var(--brd);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+.mc.done{border-left:4px solid var(--lime);}
+.mc-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;padding:7px 14px;background:rgba(0,0,0,.3);font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:2px;}
+.mc-grp{color:var(--gold);font-weight:700;}
+.mc-dt{color:var(--mut);}
+.mc-st{color:var(--lime);}
+.mc-teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;padding:13px 14px;}
+.team{display:flex;align-items:center;gap:8px;min-width:0;}
+.team.aw{flex-direction:row-reverse;}
+.tf{font-size:24px;flex-shrink:0;}
+.tn{font-family:'Oswald',sans-serif;font-size:14px;font-weight:600;}
+.vs{text-align:center;min-width:60px;}
+.vs-sc{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);letter-spacing:3px;line-height:1;}
+.vs-txt{font-family:'Bebas Neue',sans-serif;font-size:13px;color:var(--mut);letter-spacing:3px;}
+.mc-prono{padding:10px 14px 14px;background:rgba(0,0,0,.2);border-top:1px solid rgba(30,48,80,.7);}
+.plbl{font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--mut);margin-bottom:8px;}
+.chs{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
+.ch{flex:1;min-width:80px;padding:8px 5px;background:var(--ink3);border:1px solid var(--brd);color:var(--txt);border-radius:7px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:12px;font-weight:600;text-align:center;transition:all .15s;line-height:1.3;}
+.ch:hover{border-color:var(--gold);color:var(--gold);}
+.ch.on{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700;}
+.sc-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.sc-lbl{font-family:'Oswald',sans-serif;font-size:11px;color:var(--mut);flex-shrink:0;}
+.sc-in{width:50px;height:38px;background:var(--ink);border:1px solid var(--brd);color:var(--txt);text-align:center;border-radius:7px;font-size:18px;font-weight:700;font-family:'Bebas Neue',sans-serif;}
+.sc-in:focus{outline:none;border-color:var(--gold);}
+.sc-sep{color:var(--mut);font-weight:700;font-size:18px;}
+.btn-save{width:100%;padding:9px;background:var(--ink3);border:2px solid var(--lime);color:var(--lime);border-radius:7px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:all .2s;}
+.btn-save:hover{background:var(--lime);color:#000;}
+.btn-save.ok{background:rgba(184,255,71,.1);}
+.ptag{display:inline-flex;align-items:center;background:rgba(240,192,58,.15);border:1px solid rgba(240,192,58,.3);color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:13px;padding:2px 9px;border-radius:20px;margin-left:8px;}
+.recap{font-family:'Oswald',sans-serif;font-size:12px;color:var(--mut);padding:7px 10px;background:rgba(0,0,0,.2);border-radius:7px;}
+.recap strong{color:var(--txt);}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--brd);border-radius:12px;overflow:hidden;margin-bottom:14px;}
+.chd{background:rgba(0,0,0,.3);padding:11px 15px;border-bottom:1px solid var(--brd);font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.cbd{padding:15px;}
+
+/* VAINQUEUR */
+.vc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;}
+.vc-btn{background:var(--ink3);border:1px solid var(--brd);border-radius:9px;padding:10px 5px;text-align:center;cursor:pointer;color:var(--txt);transition:all .18s;}
+.vc-btn:hover{border-color:var(--gold);}
+.vc-btn.on{border-color:var(--gold);background:rgba(240,192,58,.1);}
+.vc-fl{font-size:22px;display:block;margin-bottom:4px;}
+.vc-nm{font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;line-height:1.2;}
+
+/* CLASSEMENT */
+.rk-hd{display:grid;grid-template-columns:44px 1fr 130px 60px;padding:9px 14px;background:rgba(0,0,0,.3);font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--mut);border-bottom:1px solid var(--brd);}
+.rk-row{display:grid;grid-template-columns:44px 1fr 130px 60px;padding:12px 14px;align-items:center;border-bottom:1px solid rgba(30,48,80,.4);background:var(--card);}
+.rk-row:last-child{border-bottom:none;}
+.rk-n{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--mut);}
+.rk-n.g{color:var(--gold);}.rk-n.s{color:#A0A8B8;}.rk-n.b{color:#A06830;}
+.rk-nm{font-family:'Oswald',sans-serif;font-size:15px;font-weight:600;}
+.rk-v{font-size:12px;color:var(--lime);font-family:'Oswald',sans-serif;}
+.rk-pt{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);text-align:right;}
+
+/* REGLES */
+.rule{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid rgba(30,48,80,.4);}
+.rule:last-child{border-bottom:none;}
+.rule-box{min-width:54px;text-align:center;background:rgba(240,192,58,.07);border:1px solid rgba(240,192,58,.2);border-radius:9px;padding:5px 4px;}
+.rule-n{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);line-height:1;}
+.rule-l{font-family:'Oswald',sans-serif;font-size:9px;color:var(--mut);letter-spacing:1px;}
+.rule-t{font-size:14px;line-height:1.6;}
+.rule-t strong{display:block;font-family:'Oswald',sans-serif;font-size:15px;color:var(--txt);margin-bottom:3px;}
+
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink3);border:1px solid var(--gold);color:var(--txt);padding:11px 22px;border-radius:30px;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:1px;opacity:0;transition:opacity .3s;z-index:9999;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;}
+
+/* IMPRESSION */
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body{background:#fff!important;color:#000!important;}
+  .tabs,.fbar,.chs,.sc-row,.btn-save,.btn-sm,#toast{display:none!important;}
+  .topbar{position:static;border-bottom:3px solid #000;background:#fff!important;}
+  .brand{color:#000!important;}.brand small{color:#666!important;}
+  .name-inp{border-color:#000!important;color:#000!important;background:#fff!important;}
+  .wrap{padding:10px 0 0!important;}
+  .mc{background:#fff!important;border:1px solid #ccc!important;border-radius:0!important;margin-bottom:5px!important;border-left:none!important;}
+  .mc.done{border-left:4px solid #090!important;}
+  .mc-top{background:#f0f0f0!important;padding:4px 10px!important;}
+  .mc-grp{color:#000!important;}.mc-dt{color:#444!important;}
+  .mc-teams{padding:6px 10px!important;}
+  .tf{font-size:18px!important;}.tn{font-size:12px!important;color:#000!important;}
+  .vs-sc{font-size:18px!important;color:#000!important;}.vs-txt{color:#999!important;}
+  .mc-prono{padding:4px 10px 8px!important;background:#fff!important;border-top:1px solid #eee!important;}
+  .plbl{color:#666!important;font-size:9px!important;margin-bottom:4px!important;}
+  .recap{background:#f8f8f8!important;border:1px solid #ddd!important;color:#000!important;font-size:11px!important;}
+  .recap strong{color:#000!important;}
+  .ptag{background:#ffe!important;border:1px solid #cc0!important;color:#664!important;}
+  #mlist{display:grid!important;grid-template-columns:1fr 1fr;gap:5px;}
+  .stit{display:none!important;}
+  .pg{display:none!important;}
+  #pg-pronostics{display:block!important;}
+}
+@media(max-width:480px){.tn{font-size:12px;}.tf{font-size:20px;}.rk-hd,.rk-row{grid-template-columns:38px 1fr 90px 50px;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">&#9917; CDM 2026<small>Challenge Pronostics &middot; SPIP Moselle</small></div>
+    <div class="topbar-right">
+      <input class="name-inp" type="text" id="nom" placeholder="Votre nom..." maxlength="25" autocomplete="off">
+      <button class="btn-sm" onclick="window.print()">&#128438; Imprimer</button>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-p="pronostics">&#9917; Pronostics</button>
+  <button class="tab" data-p="vainqueur">&#127942; Vainqueur</button>
+  <button class="tab" data-p="classement">&#127941; Classement</button>
+  <button class="tab" data-p="regles">&#128203; R&egrave;gles</button>
+</div>
+
+<div class="wrap">
+  <div class="pg on" id="pg-pronostics">
+    <div class="stit"><em>&#9917;</em> Matchs</div>
+    <div class="fbar" id="fbar"></div>
+    <div id="mlist"></div>
+  </div>
+
+  <div class="pg" id="pg-vainqueur">
+    <div class="stit"><em>&#127942;</em> Vainqueur</div>
+    <div class="card"><div class="cbd">
+      <p style="margin-bottom:14px;font-size:14px;color:var(--mut);line-height:1.7">Quel pays remportera la CdM 2026 ?<br><strong style="color:var(--gold)">+20 points</strong> si correct. Choix <strong style="color:var(--txt)">d&eacute;finitif</strong>.</p>
+      <div id="v-ok" style="display:none">
+        <div style="text-align:center;padding:22px;background:rgba(240,192,58,.07);border-radius:12px;border:1px solid rgba(240,192,58,.25)">
+          <div style="font-size:50px;margin-bottom:8px" id="v-flag">-</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);letter-spacing:3px" id="v-name">-</div>
+          <div style="font-size:12px;color:var(--lime);margin-top:8px;font-family:'Oswald',sans-serif">&#10003; Enregistr&eacute;</div>
+        </div>
+      </div>
+      <div id="v-pick">
+        <div class="vc-grid" id="vc-grid"></div>
+        <button class="btn-save" style="margin-top:14px;border-color:var(--gold);color:var(--gold)" id="btn-cv">Confirmer mon choix (+20 pts)</button>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="pg" id="pg-classement">
+    <div class="stit"><em>&#127941;</em> Classement</div>
+    <div class="card">
+      <div class="rk-hd"><div>#</div><div>Joueur</div><div>Vainqueur</div><div style="text-align:right">Pts</div></div>
+      <div id="rk-list"></div>
+    </div>
+  </div>
+
+  <div class="pg" id="pg-regles">
+    <div class="stit"><em>&#128203;</em> R&egrave;gles</div>
+    <div class="card"><div class="cbd" style="padding:0 15px">
+      <div class="rule"><div class="rule-box"><div class="rule-n">3</div><div class="rule-l">pts</div></div><div class="rule-t"><strong>Score exact + bon r&eacute;sultat</strong>R&eacute;sultat correct (V/N/D) ET score exact.</div></div>
+      <div class="rule"><div class="rule-box"><div class="rule-n">1</div><div class="rule-l">pt</div></div><div class="rule-t"><strong>Bon r&eacute;sultat seul</strong>R&eacute;sultat correct mais score inexact.</div></div>
+      <div class="rule"><div class="rule-box" style="border-color:rgba(90,112,144,.3);background:transparent"><div class="rule-n" style="color:var(--mut)">0</div><div class="rule-l">pt</div></div><div class="rule-t"><strong style="color:var(--mut)">Mauvais r&eacute;sultat</strong>Incorrect.</div></div>
+      <div class="rule"><div class="rule-box"><div class="rule-n">20</div><div class="rule-l">bonus</div></div><div class="rule-t"><strong>Vainqueur de la CdM</strong>Bonus si votre pays gagne. Choix d&eacute;finitif avant le 1er match.</div></div>
+    </div></div>
+    <div class="card"><div class="chd">Format CdM 2026</div><div class="cbd" style="font-size:14px;line-height:1.8;color:var(--mut)">
+      <strong style="color:var(--txt)">48 &eacute;quipes</strong> &mdash; 12 groupes de 4 &mdash; 11 juin au 19 juillet 2026<br>
+      Canada, &Eacute;tats-Unis, Mexique<br><br>
+      Imprimez votre feuille pour &eacute;viter toute triche.
+    </div></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+var GRP={
+  A:[{f:'MX',n:'Mexique'},{f:'ZA',n:'Afrique S.'},{f:'KR',n:'Coree S.'},{f:'CZ',n:'R.tcheque'}],
+  B:[{f:'CA',n:'Canada'},{f:'QA',n:'Qatar'},{f:'CH',n:'Suisse'},{f:'BA',n:'Bosnie'}],
+  C:[{f:'BR',n:'Bresil'},{f:'MA',n:'Maroc'},{f:'HT',n:'Haiti'},{f:'SC',n:'Ecosse'}],
+  D:[{f:'US',n:'Etats-Unis'},{f:'PY',n:'Paraguay'},{f:'AU',n:'Australie'},{f:'TR',n:'Turquie'}],
+  E:[{f:'DE',n:'Allemagne'},{f:'CW',n:'Curacao'},{f:'CI',n:'Cote Iv.'},{f:'EC',n:'Equateur'}],
+  F:[{f:'NL',n:'Pays-Bas'},{f:'JP',n:'Japon'},{f:'TN',n:'Tunisie'},{f:'SE',n:'Suede'}],
+  G:[{f:'BE',n:'Belgique'},{f:'EG',n:'Egypte'},{f:'IR',n:'Iran'},{f:'NZ',n:'N.Zelande'}],
+  H:[{f:'ES',n:'Espagne'},{f:'CV',n:'Cap-Vert'},{f:'SA',n:'Ar.Saoudite'},{f:'UY',n:'Uruguay'}],
+  I:[{f:'FR',n:'France'},{f:'IQ',n:'Irak'},{f:'SN',n:'Senegal'},{f:'NO',n:'Norvege'}],
+  J:[{f:'AR',n:'Argentine'},{f:'DZ',n:'Algerie'},{f:'AT',n:'Autriche'},{f:'JO',n:'Jordanie'}],
+  K:[{f:'CD',n:'RD Congo'},{f:'PT',n:'Portugal'},{f:'UZ',n:'Ouzbek.'},{f:'CO',n:'Colombie'}],
+  L:[{f:'EN',n:'Angleterre'},{f:'HR',n:'Croatie'},{f:'GH',n:'Ghana'},{f:'PA',n:'Panama'}]
+};
+var GD={A:['12/06','16/06','22/06'],B:['13/06','17/06','22/06'],C:['12/06','17/06','22/06'],D:['13/06','17/06','23/06'],E:['13/06','17/06','23/06'],F:['14/06','18/06','23/06'],G:['14/06','18/06','24/06'],H:['14/06','18/06','24/06'],I:['15/06','19/06','25/06'],J:['15/06','19/06','25/06'],K:['16/06','20/06','26/06'],L:['16/06','20/06','26/06']};
+var PAYS=[{f:'FR',n:'France'},{f:'BR',n:'Bresil'},{f:'AR',n:'Argentine'},{f:'DE',n:'Allemagne'},{f:'ES',n:'Espagne'},{f:'EN',n:'Angleterre'},{f:'PT',n:'Portugal'},{f:'NL',n:'Pays-Bas'},{f:'BE',n:'Belgique'},{f:'UY',n:'Uruguay'},{f:'HR',n:'Croatie'},{f:'US',n:'Etats-Unis'},{f:'MX',n:'Mexique'},{f:'JP',n:'Japon'},{f:'MA',n:'Maroc'},{f:'SN',n:'Senegal'},{f:'CA',n:'Canada'},{f:'KR',n:'Coree S.'},{f:'CO',n:'Colombie'},{f:'ZA',n:'Afrique S.'},{f:'CH',n:'Suisse'},{f:'AU',n:'Australie'},{f:'EC',n:'Equateur'},{f:'GH',n:'Ghana'},{f:'CI',n:'Cote Iv.'},{f:'IR',n:'Iran'},{f:'CZ',n:'R.tcheque'},{f:'QA',n:'Qatar'},{f:'BA',n:'Bosnie'},{f:'SC',n:'Ecosse'},{f:'HT',n:'Haiti'},{f:'PY',n:'Paraguay'},{f:'TR',n:'Turquie'},{f:'CW',n:'Curacao'},{f:'SE',n:'Suede'},{f:'TN',n:'Tunisie'},{f:'EG',n:'Egypte'},{f:'NZ',n:'N.Zelande'},{f:'CV',n:'Cap-Vert'},{f:'SA',n:'Ar.Saoudite'},{f:'IQ',n:'Irak'},{f:'NO',n:'Norvege'},{f:'DZ',n:'Algerie'},{f:'AT',n:'Autriche'},{f:'JO',n:'Jordanie'},{f:'CD',n:'RD Congo'},{f:'UZ',n:'Ouzbek.'},{f:'PA',n:'Panama'}];
+
+function fl(c){try{if(c==='SC')return String.fromCodePoint(127988,917607,917619,917619,917603,917620);if(c==='EN')return String.fromCodePoint(127988,917607,917602,917605,917607,917620);if(c==='CW')return'\uD83C\uDDE8\uD83C\uDDFC';if(c.length!==2)return'';return String.fromCodePoint(127462+c.charCodeAt(0)-65,127462+c.charCodeAt(1)-65);}catch(e){return'';}}
+
+function buildM(){
+  var m=[],pairs=[[0,1],[2,3],[0,2],[1,3],[0,3],[1,2]],ks=Object.keys(GRP);
+  for(var gi=0;gi<ks.length;gi++){var g=ks[gi],t=GRP[g],d=GD[g];for(var pi=0;pi<pairs.length;pi++){var p=pairs[pi],di=pi<2?0:pi<4?1:2;m.push({id:g+pi,group:'Gr.'+g,date:d[di],home:t[p[0]],away:t[p[1]],result:null});}}
+  var el=[{ph:'8es',n:16,d:'29/06'},{ph:'Quarts',n:8,d:'05/07'},{ph:'Demies',n:4,d:'09/07'},{ph:'3e place',n:1,d:'12/07'},{ph:'Finale',n:1,d:'13/07'}];
+  for(var ei=0;ei<el.length;ei++)for(var i=0;i<el[ei].n;i++)m.push({id:'E'+m.length,group:el[ei].ph,date:el[ei].d,home:{f:'',n:'A def.'},away:{f:'',n:'A def.'},result:null,tbd:true});
+  return m;
+}
+
+// Storage
+var SK_U='cdm26u',SK_R='cdm26r';
+function getU(){try{var r=localStorage.getItem(SK_U);return r?JSON.parse(r):{}}catch(e){return{}}}
+function setU(u){try{localStorage.setItem(SK_U,JSON.stringify(u))}catch(e){}}
+function getR(){try{var r=localStorage.getItem(SK_R);return r?JSON.parse(r):{matches:buildM(),vR:null}}catch(e){return{matches:buildM(),vR:null}}}
+function setR(r){try{localStorage.setItem(SK_R,JSON.stringify(r))}catch(e){}}
+var R=getR();
+
+// Nom courant depuis le champ
+function NOM(){return document.getElementById('nom').value.trim();}
+function myData(){var u=getU(),n=NOM();return n?u[n]||{pronos:{},vainqueur:null}:{pronos:{},vainqueur:null};}
+function saveMe(d){var n=NOM();if(!n)return;var u=getU();u[n]=d;setU(u);}
+
+var FILT='all',SEL_V=null;
+
+// Tabs
+var tabs=document.querySelectorAll('.tab');
+for(var ti=0;ti<tabs.length;ti++){
+  (function(t){t.onclick=function(){
+    for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('on');
+    var pgs=document.querySelectorAll('.pg');for(var i=0;i<pgs.length;i++)pgs[i].classList.remove('on');
+    t.classList.add('on');
+    var p=t.getAttribute('data-p');
+    document.getElementById('pg-'+p).classList.add('on');
+    if(p==='classement')renderRk();
+    if(p==='vainqueur')renderV();
+  };})(tabs[ti]);
+}
+
+// Filtres
+function renderFbar(){
+  var bar=document.getElementById('fbar');bar.innerHTML='';
+  var gs=['all'];
+  for(var i=0;i<R.matches.length;i++)if(gs.indexOf(R.matches[i].group)<0)gs.push(R.matches[i].group);
+  for(var i=0;i<gs.length;i++){(function(g){var b=document.createElement('button');b.className='flt'+(g===FILT?' on':'');b.textContent=g==='all'?'Tous':g;b.onclick=function(){FILT=g;renderFbar();renderM();};bar.appendChild(b);})(gs[i]);}
+}
+
+// Matchs
+function renderM(){
